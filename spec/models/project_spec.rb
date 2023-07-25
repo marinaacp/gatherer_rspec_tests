@@ -45,29 +45,62 @@ RSpec.describe Project do
       expect(project.name).to match("OOOPSI").or ("DOOSIE")
       # expect(project.name).to match(an_object_eq_to("OOOPSI").or an_object_eq_to("DOOSIE"))
     end
+
+    it "properly handles a blank project" do
+      expect(project.completed_velocity).to eq(0)
+      expect(project.current_rate).to eq(0)
+      expect(project.projected_days_remaining).to be_nan # The be_nan assertion uses the RSpec dynamic matcher to check against nan?, which is a method on Number that is true if the number is “not a number,”
+      expect(project).not_to be_on_schedule
+    end
+
   end
 
   describe "estimates" do # Each describe block can have its own setup, making it easier to see what setup goes with what spec
     let(:project) { Project.new }
-    let(:done) { Task.new(size: 2, complete: true, completed_at: 2.days.ago) }
+    let(:newly_done) { Task.new(size: 3, completed_at: 1.day.ago) }
+    let(:old_done) { Task.new(size: 2, completed_at: 6.month.ago)}
     let(:small_not_done) { Task.new(size: 1) }
     let(:large_not_done) { Task.new(size: 4) }
     # obs:  Each task has a different score, and neither of the two adds up to the third
     # the let method are the GIVEN data
 
     before(:example) do # before(:each) or before(:example) block is executed as part of the setup before each spec.
-      project.tasks = [done, small_not_done, large_not_done]
+      project.tasks = [newly_done, old_done, small_not_done, large_not_done]
     end
     # the before bloco is the WHEN action
 
     it "can calculate total size" do
-      expect(project.total_size).to eq(7)
+      expect(project.total_size).to eq(10)
     end
     # each it satatemt is an assetion - WHAT behavior expect
 
     it "can calculate remaining size" do
       expect(project.remaining_size).to eq(5)
     end
+
+    it "knows its velocity" do
+      expect(project.completed_velocity).to eq(3)
+    end
+
+    it "knows its rate" do
+      expect(project.current_rate).to eq(1.0 / 7)
+      # expect(actual).to be_within(delta).of(expected)
+    end
+
+    it "knows its projected days remaining" do
+      expect(project.projected_days_remaining).to eq(35)
+    end
+
+    it "knows if it is not on schedule" do
+      project.due_date = 1.week.from_now
+      expect(project).not_to be_on_schedule
+    end
+
+    it "knows if it is on schedule" do
+      project.due_date = 6.months.from_now
+      expect(project).to be_on_schedule
+    end
+
   end
 end
 

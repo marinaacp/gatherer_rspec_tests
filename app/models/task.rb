@@ -19,7 +19,7 @@ class Task
   end
   def part_of_velocity?
     return false unless complete?
-    completed_at > 21.days.ago
+    completed_at >  Project.velocity_length_in_days.days.ago # return false if completed more the 21 days ago
   end
   def points_toward_velocity
     part_of_velocity? ? size : 0
