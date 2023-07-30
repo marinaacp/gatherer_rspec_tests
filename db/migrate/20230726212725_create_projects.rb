@@ -2,7 +2,8 @@ class CreateProjects < ActiveRecord::Migration[7.0]
   def change
     create_table :projects do |t|
       t.string :name
-      t.date :dues_date
+      t.date :due_date
+      t.integer :value
 
       t.timestamps
     end

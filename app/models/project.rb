@@ -1,9 +1,14 @@
-class Project
-  attr_accessor :tasks, :value, :name, :due_date
+class Project < ApplicationRecord # superclass ApplicationRecord, which Rails defines for your project and which inherits from ActiveRecord::Base
+  has_many :tasks, dependent: :destroy
+  # attr_accessor :tasks, :value, :name, :due_date
 
-  def initialize
-    @tasks = []
+  # def initialize -- that is no longer needed because ActiveRecord is taking over the functionality
+  #   @tasks = []
+  # end
+  def self.velocity_length_in_days # self inside a method defines a class method, rather than an instance method. This method can be called directly on the class itself (ClassName.velocity_length_in_days)
+    21
   end
+  
   def incomplete_tasks
     tasks.reject(&:complete?)
   end
@@ -38,13 +43,5 @@ class Project
     return false if projected_days_remaining.nan? # To pass the "properly handles a blank project"
     (Time.zone.today + projected_days_remaining) <= due_date # Time.zone.today returns the current date in the time zone that is set in your Rails application. Date.today returns the current date in the system's local time zone, without considering any time zone configuration set in Rails.
   end
-
-  def self.velocity_length_in_days # self inside a method defines a class method, rather than an instance method. This method can be called directly on the class itself (ClassName.velocity_length_in_days)
-    21
-  end
-
-
-
-
 
 end
