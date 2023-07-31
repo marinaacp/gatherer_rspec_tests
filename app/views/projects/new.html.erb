@@ -1,0 +1,15 @@
+<h1>New Project</h1>
+
+<%= form_for(@project) do |f| %>
+  <%= f.label(:name) %>
+  <%= f.text_field(:name) %>
+  <br/>
+  <%= f.label(:tasks) %>
+  <%= text_area_tag("project[tasks]") %>
+  <%# When the form is submitted, the content entered in this textarea will be sent to
+    the server with the parameter name "project[tasks]". params[:project][:tasks] %>
+  <%# If you do use f.text_area :tasks, Rails tries to make the value of the text area the value of the
+    tasks relation, and places in that text area an ugly Ruby string representation of the empty relation, %>
+  <br/>
+  <%= f.submit %>
+<% end %>

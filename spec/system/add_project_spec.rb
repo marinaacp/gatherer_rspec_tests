@@ -3,7 +3,7 @@ require "rails_helper"
 # System Tests: System tests are high-level tests that examine the application as a whole. They interact with the application in a way
 # that simulates how a user would interact with it, usually using a web driver, to ensure that all components work together correctly.
 
-RSpec.describe "adding a project", :pending, type: :system do
+RSpec.describe "adding a project", type: :system do #:pending, (beforte type)
   it "allows a user to create a project with tasks" do
     # pending "not implemented yet"
     visit new_project_path
